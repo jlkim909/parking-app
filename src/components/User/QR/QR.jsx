@@ -21,7 +21,9 @@ function QR() {
             console.info(error);
           }
         }}
-        facingMode="rear"
+        constraints={{
+          facingMode: "environment",
+        }}
         style={{ width: "200px", height: "100px" }}
       />
       <p>{data}</p>
