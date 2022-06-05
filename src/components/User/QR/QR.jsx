@@ -13,10 +13,11 @@ function QR() {
   return (
     <Container>
       <QrReader
-        onScan={(result, error) => {
+        onResult={(result, error) => {
           if (!!result) {
             setData(result?.text);
           }
+
           if (!!error) {
             console.info(error);
           }
@@ -24,7 +25,7 @@ function QR() {
         constraints={{
           facingMode: "environment",
         }}
-        style={{ width: "200px", height: "100px" }}
+        style={{ width: "100%" }}
       />
       <p>{data}</p>
     </Container>
