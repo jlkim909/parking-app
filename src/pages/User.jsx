@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import ParkinglotMap from "./Map/ParkinglotMap";
-import BottomMenu from "./BottomMenu";
-import Home from "./Home/Home";
-import TopMenu from "./TopMenu";
-import InUse from "./Used/InUse";
-import GiftBox from "./Used/GiftBox";
-import Paycheck from "./Used/Paycheck";
-import QR from "./QR/QR";
+import ParkinglotMap from "../components/User/Map/ParkinglotMap";
+import BottomMenu from "../components/User/BottomMenu";
+import Home from "../components/User/Home/Home";
+import TopMenu from "../components/User/TopMenu";
+import InUse from "../components/User/Used/InUse";
+import GiftBox from "../components/User/Used/GiftBox";
+import Paycheck from "../components/User/Used/Paycheck";
+import QR from "../components/User/QR/QR";
 
 const Container = styled.div`
   position: absolute;

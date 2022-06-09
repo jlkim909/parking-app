@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useCallback } from "react";
 import { MdPortrait } from "react-icons/md";
 import { AiOutlineGift } from "react-icons/ai";
 import {
@@ -8,6 +8,8 @@ import {
   IoTimerOutline,
 } from "react-icons/io5";
 import Ticket from "../Home/Ticket";
+import "../../../firebase";
+import { getAuth, signOut } from "firebase/auth";
 
 const Container = styled.div`
   position: relative;
@@ -55,6 +57,9 @@ const EndButton = styled.div`
 `;
 
 function InUse({ handlePage }) {
+  const handleLogout = useCallback(async () => {
+    await signOut(getAuth());
+  }, []);
   return (
     <Container>
       <UserInfoConatainer>
@@ -81,7 +86,10 @@ function InUse({ handlePage }) {
               이용내역
             </span>
           </div>
-          <div className="flex flex-col items-center justify-center">
+          <div
+            className="flex flex-col items-center justify-center"
+            onClick={handleLogout}
+          >
             <IoLogOutOutline className="text-3xl" />
             <span className="text-xs font-bold mt-1 text-[#707070]">
               로그아웃
