@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import React from "react";
-import { useRecoilValue } from "recoil";
-import { AppInfomation } from "../../../store/store";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import GiftItem from "./GiftItem";
+import "../../../firebase";
+import { get, child, ref, getDatabase } from "firebase/database";
 
 const Container = styled.div`
   position: relative;
@@ -16,11 +17,25 @@ const Container = styled.div`
 `;
 
 function GiftBox() {
-  const data = useRecoilValue(AppInfomation);
-  const giftData = data.usersInfo[0]["gift"];
+  const { user } = useSelector((state) => state);
+  const [ticket, setTicket] = useState([]);
+  useEffect(() => {
+    if (!user.currentUser) return;
+    async function getTicket() {
+      const snapShot = await get(
+        child(ref(getDatabase()), "users/" + user.currentUser.uid + "/giftbox")
+      );
+      setTicket(snapShot.val() ? Object.values(snapShot.val()) : []);
+    }
+    getTicket();
+    return () => {
+      setTicket([]);
+    };
+  }, [user.currentUser]);
+  console.log(ticket);
   return (
     <Container>
-      {giftData.map((value, index) => (
+      {ticket?.map((value, index) => (
         <GiftItem data={value} key={index} />
       ))}
     </Container>

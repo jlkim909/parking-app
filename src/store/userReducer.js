@@ -7,6 +7,7 @@ export const clearUser = () => ({ type: CLEAR_USER });
 const initialState = {
   currentUser: null,
   isLoading: true,
+  ticket:[],
 };
 
 const userReducer = (state = initialState, action) => {

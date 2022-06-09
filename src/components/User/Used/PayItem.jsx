@@ -20,7 +20,24 @@ const Item = styled.div`
   color: #505050;
 `;
 
+const formateDate = (millisecond) => {
+  const tempTime = new Date(millisecond);
+  let date = tempTime.getDate();
+  if (date < 10) {
+    date = `0${date}`;
+  }
+
+  let month = tempTime.getMonth() + 1;
+  if (month < 10) {
+    month = `0${month}`;
+  }
+
+  let year = tempTime.getFullYear();
+  return `${year}/${month}/${date}`;
+};
 function PayItem({ data }) {
+  const tempTime = new Date(data?.timestamp);
+  console.log(tempTime);
   return (
     <Container>
       <Item>
@@ -45,7 +62,7 @@ function PayItem({ data }) {
           x {data?.num}
         </span>
       </Item>
-      <span style={{ fontSize: "0.5rem" }}>{data?.date}</span>
+      <span style={{ fontSize: "0.5rem" }}>{formateDate(data?.timestamp)}</span>
     </Container>
   );
 }

@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoCafe, IoCart } from "react-icons/io5";
 import { RiGasStationFill } from "react-icons/ri";
 import { ImSpoonKnife } from "react-icons/im";
 import Ticket from "./Ticket";
-import { useRecoilValue } from "recoil";
-import { AppInfomation } from "../../../store/store";
 import Dialog from "../../Dialog/Dialog";
 import NoTicket from "./NoTicket";
-
+import { useSelector } from "react-redux";
+import { get, child, ref, getDatabase } from "firebase/database";
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -58,11 +57,11 @@ const TicketItem = styled.div`
 `;
 
 function Home() {
-  const data = useRecoilValue(AppInfomation);
+  const { user } = useSelector((state) => state);
   const [category, setCategory] = useState("ALL");
   const [dialogData, setDialogData] = useState();
+  const [ticket, setTicket] = useState([]);
   const dialogRef = useRef(null);
-  const userTicket = data.usersInfo[0]["userTicketInfo"];
   const onClickTag = (code) => () => {
     if (category === code) {
       setCategory("ALL");
@@ -74,6 +73,24 @@ function Home() {
     dialogRef.current.showModal();
     setDialogData(data);
   };
+
+  // const testData = get(
+  //   ref(getDatabase(), "users/" + user.currentUser.uid + "/ticket")
+  // );
+  // console.log(testData);
+  useEffect(() => {
+    if (!user.currentUser) return;
+    async function getTicket() {
+      const snapShot = await get(
+        child(ref(getDatabase()), "users/" + user.currentUser.uid + "/ticket")
+      );
+      setTicket(snapShot.val() ? Object.values(snapShot.val()) : []);
+    }
+    getTicket();
+    return () => {
+      setTicket([]);
+    };
+  }, [user.currentUser]);
   return (
     <Container>
       <TagContainer>
@@ -119,8 +136,8 @@ function Home() {
         </TagItem>
       </TagContainer>
       <TicketContainer>
-        {userTicket?.length > 0 ? (
-          userTicket?.map((store, index) => {
+        {ticket?.length > 0 ? (
+          ticket?.map((store, index) => {
             if (category === "ALL" || category === store.code) {
               return (
                 <TicketItem

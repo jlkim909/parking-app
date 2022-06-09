@@ -47,7 +47,9 @@ function Join() {
         });
         await set(ref(getDatabase(), "users/" + user.uid), {
           name: user.displayName,
-          avatar: user.photoURL,
+          email: email,
+          code: user.uid,
+          userTicket: [],
         });
         dispatch(setUser(user));
       } catch (e) {

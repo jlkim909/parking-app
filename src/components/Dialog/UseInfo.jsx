@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useCallback } from "react";
 import { IoCloseSharp } from "react-icons/io5";
+import "../../firebase";
+import { getDatabase, ref, set, get, serverTimestamp } from "firebase/database";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
@@ -50,7 +53,75 @@ const DialogBtn = styled.div`
   font-size: 1.2rem;
 `;
 
+const formateDate = (dateData) => {
+  console.log(dateData);
+  let hours = dateData.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+
+  let minutes = dateData.getMinutes() + 1;
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  return `${hours} : ${minutes}`;
+};
+
+const formateDate2 = (dateData, time) => {
+  dateData.setMinutes(dateData.getMinutes() + time);
+  let hours = dateData.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+
+  let minutes = dateData.getMinutes() + 1;
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  return `${hours} : ${minutes}`;
+};
+
 function DialogUse({ storeData, dialogRef }) {
+  const { user } = useSelector((state) => state);
+  const createInUseTicket = useCallback(
+    (currentTime) => ({
+      timestamp: serverTimestamp(),
+      code: storeData?.code,
+      num: storeData?.num,
+      date: storeData?.date,
+      storeName: storeData?.storeName,
+      time: storeData?.time,
+      startTime: formateDate(currentTime),
+      endTime: formateDate2(currentTime, storeData?.time),
+    }),
+    [
+      storeData?.storeName,
+      storeData?.num,
+      storeData?.code,
+      storeData?.date,
+      storeData?.time,
+    ]
+  );
+  const handleParkingStart = useCallback(async () => {
+    if (!storeData) return;
+    try {
+      const keep = await get(
+        ref(getDatabase(), "users/" + user.currentUser.uid + "/inUseTicket")
+      );
+      if (!keep?.val()) {
+        const currentTime = new Date();
+        await set(
+          ref(getDatabase(), "users/" + user.currentUser.uid + "/inUseTicket"),
+          createInUseTicket(currentTime)
+        );
+      } else {
+        alert("이미 사용중인 티켓이 있습니다!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    dialogRef.current.close();
+  }, [storeData, user.currentUser?.uid, createInUseTicket, dialogRef]);
   return (
     <Container>
       <Header>
@@ -61,7 +132,7 @@ function DialogUse({ storeData, dialogRef }) {
             fontSize: 20,
           }}
         >
-          유민국님
+          {user?.currentUser.displayName}님
         </span>
         <IoCloseSharp
           className="text-2xl"
@@ -86,7 +157,7 @@ function DialogUse({ storeData, dialogRef }) {
           </select>
         </TextContainer>
       </Body>
-      <DialogBtn>주차 시작</DialogBtn>
+      <DialogBtn onClick={handleParkingStart}>주차 시작</DialogBtn>
     </Container>
   );
 }

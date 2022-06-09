@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import React from "react";
-import { useRecoilValue } from "recoil";
-import { AppInfomation } from "../../../store/store";
+import React, { useEffect, useState } from "react";
 import PayItem from "./PayItem";
+import "../../../firebase";
+import { get, child, ref, getDatabase } from "firebase/database";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   position: relative;
@@ -16,11 +17,27 @@ const Container = styled.div`
 `;
 
 function Paycheck() {
-  const data = useRecoilValue(AppInfomation);
-  const giftData = data.usersInfo[0]["paycheck"];
+  const { user } = useSelector((state) => state);
+  const [ticket, setTicket] = useState([]);
+  useEffect(() => {
+    if (!user.currentUser) return;
+    async function getTicket() {
+      const snapShot = await get(
+        child(
+          ref(getDatabase()),
+          "users/" + user.currentUser.uid + "/usedTicket"
+        )
+      );
+      setTicket(snapShot.val() ? Object.values(snapShot.val()) : []);
+    }
+    getTicket();
+    return () => {
+      setTicket([]);
+    };
+  }, [user.currentUser]);
   return (
     <Container>
-      {giftData.map((value, index) => (
+      {ticket?.map((value, index) => (
         <PayItem data={value} key={index} />
       ))}
     </Container>

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MdPortrait } from "react-icons/md";
 import { AiOutlineGift } from "react-icons/ai";
 import {
@@ -10,6 +10,15 @@ import {
 import Ticket from "../Home/Ticket";
 import "../../../firebase";
 import { getAuth, signOut } from "firebase/auth";
+import { useSelector } from "react-redux";
+import {
+  get,
+  set,
+  ref,
+  getDatabase,
+  remove,
+  serverTimestamp,
+} from "firebase/database";
 
 const Container = styled.div`
   position: relative;
@@ -57,9 +66,66 @@ const EndButton = styled.div`
 `;
 
 function InUse({ handlePage }) {
+  const { user } = useSelector((state) => state);
+  const [inUseTicket, setInUseTicket] = useState();
+  const createUsedTicket = useCallback(
+    () => ({
+      timestamp: serverTimestamp(),
+      code: inUseTicket?.code,
+      num: inUseTicket?.num,
+      date: inUseTicket?.date,
+      storeName: inUseTicket?.storeName,
+      time: inUseTicket?.time,
+    }),
+    [
+      inUseTicket?.storeName,
+      inUseTicket?.num,
+      inUseTicket?.code,
+      inUseTicket?.date,
+      inUseTicket?.time,
+    ]
+  );
   const handleLogout = useCallback(async () => {
     await signOut(getAuth());
   }, []);
+
+  const handleEndTicket = useCallback(async () => {
+    if (!inUseTicket) return;
+    try {
+      await set(
+        ref(
+          getDatabase(),
+          "users/" +
+            user.currentUser.uid +
+            "/usedTicket/" +
+            inUseTicket?.storeName
+        ),
+        createUsedTicket()
+      );
+      await remove(
+        ref(getDatabase(), "users/" + user.currentUser.uid + "/inUseTicket")
+      );
+      setInUseTicket();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [inUseTicket, user.currentUser.uid, createUsedTicket]);
+
+  useEffect(() => {
+    if (!user.currentUser) return;
+    async function getTicket() {
+      const snapShot = await get(
+        ref(getDatabase(), "users/" + user.currentUser.uid + "/inUseTicket")
+      );
+      if (!!snapShot.val()) {
+        setInUseTicket(snapShot.val() ? snapShot.val() : null);
+      }
+    }
+    getTicket();
+    return () => {
+      setInUseTicket();
+    };
+  }, [user.currentUser]);
   return (
     <Container>
       <UserInfoConatainer>
@@ -98,23 +164,33 @@ function InUse({ handlePage }) {
         </div>
       </UserInfoConatainer>
       <TicketInfoContainer>
-        <div className="flex gap-4 items-center w-[80%] h-[20%]">
-          <Ticket category="MT1" size={50} />
-          <span className="font-bold text-[#363636] mt-2">E-마트</span>
-        </div>
-        <div className="flex text-[#707070] font-bold items-center justify-between w-[85%] h-[20%]">
-          <span className="text-base">이용 시작 시간</span>
-          <span>12 : 05</span>
-        </div>
-        <div className="flex text-[#707070] font-bold items-center justify-between w-[85%]">
-          <span className="text-base">이용 종료 시간</span>
-          <span>15 : 04</span>
-        </div>
-        <div className="flex items-center w-[85%] h-[30%] justify-end">
-          <IoTimerOutline className="text-[1.5rem]" />
-          <span className="font-bold ml-2">59분</span>
-        </div>
-        <EndButton>사용 종료</EndButton>
+        {inUseTicket ? (
+          <>
+            <div className="flex gap-4 items-center w-[80%] h-[20%]">
+              <Ticket category={inUseTicket.code} size={50} />
+              <span className="font-bold text-[#363636] mt-2">
+                {inUseTicket.storeName}
+              </span>
+            </div>
+            <div className="flex text-[#707070] font-bold items-center justify-between w-[85%] h-[20%]">
+              <span className="text-base">이용 시작 시간</span>
+              <span>{inUseTicket.startTime}</span>
+            </div>
+            <div className="flex text-[#707070] font-bold items-center justify-between w-[85%]">
+              <span className="text-base">이용 종료 시간</span>
+              <span>{inUseTicket.endTime}</span>
+            </div>
+            <div className="flex items-center w-[85%] h-[30%] justify-end">
+              <IoTimerOutline className="text-[1.5rem]" />
+              <span className="font-bold ml-2">{inUseTicket?.time}분</span>
+            </div>
+            <EndButton onClick={handleEndTicket}>사용 종료</EndButton>
+          </>
+        ) : (
+          <div>
+            <span>사용중인 티켓이 없습니다.!</span>
+          </div>
+        )}
       </TicketInfoContainer>
     </Container>
   );

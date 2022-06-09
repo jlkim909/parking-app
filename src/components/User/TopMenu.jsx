@@ -15,7 +15,7 @@ const Container = styled.div`
   box-shadow: 0 2px 2px lightgray;
 `;
 
-const Gift = styled.div`
+const TopBarContainer = styled.div`
   position: relative;
   width: 100%;
   height: 12%;
@@ -28,16 +28,25 @@ const Gift = styled.div`
   font-weight: bold;
   box-shadow: 0 2px 2px lightgray;
 `;
+
 function TopMenu({ page, handlePage }) {
-  if (page === "GIFT") {
+  if (page === "GIFT" || page === "PAYCHECK" || page === "JOIN") {
     return (
-      <Gift>
+      <TopBarContainer>
         <BiArrowBack
           className="w-[20%] text-3xl mt-[4%]"
           onClick={() => handlePage("INUSE")}
         />
-        <span className="w-[60%] text-center text-xl mt-[4%]">선물함</span>
-      </Gift>
+        <span className="w-[60%] text-center text-xl mt-[4%]">
+          {page === "GIFT"
+            ? "선물함"
+            : page === "PAYCHECK"
+            ? "이용내역"
+            : page === "JOIN"
+            ? "회원가입"
+            : null}
+        </span>
+      </TopBarContainer>
     );
   }
   return (

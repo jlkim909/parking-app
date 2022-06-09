@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useCallback } from "react";
 import giftTicket from "../../../image/giftTicket.png";
 import { AiOutlineGift } from "react-icons/ai";
-
+import "../../../firebase";
+import { getDatabase, ref, serverTimestamp, set, get } from "firebase/database";
+import { useSelector } from "react-redux";
 const Container = styled.div`
   width: 90%;
   min-height: 20%;
@@ -32,6 +34,38 @@ const ConfirmBtn = styled.div`
   box-shadow: 2px 2px 4px gray;
 `;
 function GiftItem({ data }) {
+  const { user } = useSelector((state) => state);
+  const createTicket = useCallback(
+    (keep) => ({
+      timestamp: serverTimestamp(),
+      code: data?.code,
+      num: data?.num,
+      date: data?.date,
+      storeName: data?.storeName,
+      time: keep?.val() ? keep?.val().time + data?.time : data?.time,
+    }),
+    [data?.storeName, data?.num, data?.code, data?.date, data?.time]
+  );
+  const registerTicket = useCallback(async () => {
+    if (!data) return;
+    try {
+      const keep = await get(
+        ref(
+          getDatabase(),
+          "users/" + user.currentUser.uid + "/ticket/" + data?.storeName
+        )
+      );
+      await set(
+        ref(
+          getDatabase(),
+          "users/" + user.currentUser.uid + "/ticket/" + data?.storeName
+        ),
+        createTicket(keep)
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }, [data, user.currentUser?.uid, createTicket]);
   return (
     <Container>
       <GiftImg>
@@ -53,7 +87,7 @@ function GiftItem({ data }) {
         >
           {data?.num}
         </span>
-        <ConfirmBtn>
+        <ConfirmBtn onClick={registerTicket}>
           <AiOutlineGift />
         </ConfirmBtn>
       </GiftImg>

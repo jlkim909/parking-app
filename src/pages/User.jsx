@@ -17,7 +17,6 @@ const Container = styled.div`
 `;
 
 function User({ data }) {
-  console.log(data);
   const [page, setPage] = useState("HOME");
   return (
     <Container>

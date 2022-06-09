@@ -56,9 +56,9 @@ function DialogTicket({ storeData, dialogRef, page }) {
         <Ticket category={storeData?.code} size={80} />
         <div className="flex items-center font-bold w-[90%]">
           <IoTimerOutline className="text-3xl" />
-          <span className="text-xl ml-1">30분</span>
+          <span className="text-xl ml-1">{storeData?.time}분</span>
           <span className="text-[#505050] text-3xl ml-[40%] mt-[-30%]">
-            x 3
+            x {storeData?.num}
           </span>
         </div>
       </Body>
