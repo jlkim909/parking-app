@@ -16,7 +16,8 @@ const Container = styled.div`
   background-color: #f6f6f6;
 `;
 
-function User() {
+function User({ data }) {
+  console.log(data);
   const [page, setPage] = useState("HOME");
   return (
     <Container>

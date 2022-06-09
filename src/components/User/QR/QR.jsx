@@ -10,6 +10,7 @@ const Container = styled.div`
 
 function QR() {
   const [data, setData] = useState("No result");
+  console.log(data);
   return (
     <Container>
       <QrReader
