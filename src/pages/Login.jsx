@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Alert, Box, Button, Container, Grid, TextField } from "@mui/material";
+import { Alert, Box, Container, Grid, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
 import "../firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import loginImg from "../image/loginlogo.png";
-function Login() {
+import { setMode } from "../store/userReducer";
+import { useDispatch, useSelector } from "react-redux";
+function Login({ client, setClient }) {
+  const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { mode } = useSelector((state) => state.user);
   const loginUser = useCallback(async (email, password) => {
     setLoading(true);
     try {
@@ -66,28 +69,40 @@ function Login() {
             width: "100%",
           }}
         >
-          <Button
+          <Box
             sx={{
-              backgroundColor: "#ECE6CC",
+              backgroundColor: mode === "user" ? "#ECE6CC" : "white",
               width: "40vw",
               height: "4vh",
               color: "#707070",
               boxShadow: "2px 2px 4px gray",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
             }}
+            onClick={() => dispatch(setMode("user"))}
           >
-            사용자용
-          </Button>
-          <Button
+            고객용
+          </Box>
+          <Box
             sx={{
-              backgroundColor: "white",
+              backgroundColor: mode === "proprietor" ? "#ECE6CC" : "white",
               width: "40vw",
               height: "4vh",
               color: "#707070",
               boxShadow: "2px 2px 4px gray",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
             }}
+            onClick={() => dispatch(setMode("proprietor"))}
           >
             사업자용
-          </Button>
+          </Box>
         </Box>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
