@@ -46,6 +46,7 @@ function JoinProprietor() {
   const [storeAddress, setStoreAddress] = useState("");
   const [storePhoneNum, setStorePhoneNum] = useState("");
   const [storeCode, setStoreCode] = useState("");
+  const [storePosition, setStorePosition] = useState({});
   const [showKeyword, setShowKeyword] = useState(false);
   //const [currentStore, setCurrentStore] = useState();
   const [firstPage, setFirstPage] = useState(true);
@@ -56,11 +57,14 @@ function JoinProprietor() {
 
   const handleStore = (store) => {
     //setCurrentStore(store);
+    console.log(store);
     setSearchKeyword(store.place_name);
     setStoreAddress(store.address_name);
     setStorePhoneNum(store.phone);
     setStoreCode(store.category_group_name);
+    setStorePosition({ x: store.x, y: store.y });
     setShowKeyword(false);
+    setSearchData([]);
   };
   const onClickClose = useCallback(() => {
     setShowKeyword(false);
@@ -157,6 +161,8 @@ function JoinProprietor() {
           ticketTime: ticketTime,
           parkingSpace: parkingSpace,
           fullTime: fullTime,
+          x: storePosition?.x,
+          y: storePosition?.y,
         });
         dispatch(setUser(user));
       } catch (e) {
@@ -164,7 +170,7 @@ function JoinProprietor() {
         setLoading(false);
       }
     },
-    [dispatch]
+    [dispatch, storePosition?.x, storePosition?.y]
   );
 
   const handleNextpage = useCallback(() => {
@@ -439,6 +445,7 @@ function JoinProprietor() {
                   name="openHour"
                   required
                   label="Hour"
+                  type="number"
                   variant="standard"
                   InputProps={{
                     endAdornment: (
@@ -459,6 +466,7 @@ function JoinProprietor() {
                 <TextField
                   name="openMinute"
                   required
+                  type="number"
                   label="Min"
                   variant="standard"
                   sx={{
@@ -483,6 +491,7 @@ function JoinProprietor() {
                   name="closeHour"
                   required
                   label="Hour"
+                  type="number"
                   variant="standard"
                   InputProps={{
                     endAdornment: (
@@ -504,6 +513,7 @@ function JoinProprietor() {
                   name="closeMinute"
                   required
                   label="Min"
+                  type="number"
                   variant="standard"
                   sx={{
                     label: { fontSize: "0.5rem" },
@@ -534,6 +544,7 @@ function JoinProprietor() {
                   name="ticketTime"
                   required
                   fullWidth
+                  type="number"
                   label="티켓 1장 당 주차시간 .ex 30분"
                   variant="standard"
                   autoComplete="off"
@@ -544,6 +555,7 @@ function JoinProprietor() {
                   name="parkingSpace"
                   required
                   fullWidth
+                  type="number"
                   variant="standard"
                   label="오픈할 주차 자리 개수"
                 />

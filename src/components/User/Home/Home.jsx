@@ -7,7 +7,9 @@ import Ticket from "./Ticket";
 import Dialog from "../../Dialog/Dialog";
 import NoTicket from "./NoTicket";
 import { useSelector } from "react-redux";
+import "../../../firebase";
 import { get, child, ref, getDatabase } from "firebase/database";
+
 const Container = styled.div`
   position: relative;
   display: flex;
