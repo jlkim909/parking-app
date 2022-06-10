@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { FaSchool, FaCoins, FaParking } from "react-icons/fa";
 import { IoMdCafe } from "react-icons/io";
 import { MdLocalHospital } from "react-icons/md";
