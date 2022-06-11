@@ -8,7 +8,7 @@ const Container = styled.div`
   min-height: 20vh;
   padding: 4%;
   background-color: white;
-  border: 2vw solid #ece6cc;
+  border: 2px solid #ece6cc;
   box-shadow: 2px 2px 4px lightgray;
   font-weight: bold;
   color: #505050;

@@ -2,7 +2,6 @@ import React, { memo, useCallback, useEffect, useRef } from "react";
 import parkingLotImg from "../../../image/parkingLot.png";
 import userPositionImg from "../../../image/car.png";
 import styled from "@emotion/styled";
-import "../../../css/MapStyle.css";
 import { useSelector } from "react-redux";
 import "../../../firebase";
 import { get, child, ref, getDatabase } from "firebase/database";
@@ -22,7 +21,6 @@ function Map({ map, ps, userPosition }) {
   const setStoreMarker = useCallback(() => {
     if (!store) return;
     for (let index = 0; index < store.length; index++) {
-      console.log(store[index].y);
       var markerPosition = new window.kakao.maps.LatLng(
         store[index].y,
         store[index].x
@@ -49,11 +47,6 @@ function Map({ map, ps, userPosition }) {
       map.current = new window.kakao.maps.Map(mapRef.current, options);
       ps.current = new window.kakao.maps.services.Places(map.current);
       window.kakao.maps.event.addListener(map.current, "idle", setStoreMarker);
-      // window.kakao.maps.event.addListener(
-      //   map.current,
-      //   "click",
-      //   placeOverlayClose
-      // );
       var markerImage = new window.kakao.maps.MarkerImage(
         userPositionImg,
         new window.kakao.maps.Size(40, 45),
@@ -82,15 +75,17 @@ function Map({ map, ps, userPosition }) {
 
   useEffect(() => {
     if (!user.currentUser) return;
-    async function getTicket() {
+    async function getStore() {
       const snapShot = await get(child(ref(getDatabase()), "store/"));
       setStore(snapShot.val() ? Object.values(snapShot.val()) : []);
     }
-    getTicket();
+    getStore();
     return () => {
       setStore([]);
     };
   }, [user.currentUser]);
+
+  console.log(store);
   return <MapContainer ref={mapRef}></MapContainer>;
 }
 

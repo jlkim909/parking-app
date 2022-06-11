@@ -2,7 +2,7 @@ import React from "react";
 
 function NoTicket() {
   return (
-    <p className="flex items-center text-7xl text-gray-400 text-center font-bold ml-10">
+    <p className="flex w-[100%] items-center justify-center text-center text-7xl text-gray-400 font-bold">
       NO
       <br />
       Ticket

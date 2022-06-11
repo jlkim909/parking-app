@@ -33,6 +33,8 @@ function QR() {
               storeCode: snapShot.val().storeCode,
               storeName: snapShot.val().storeName,
               storeTicketTime: snapShot.val().ticketTime,
+              x: snapShot.val().x,
+              y: snapShot.val().y,
             }
           : {}
       );
