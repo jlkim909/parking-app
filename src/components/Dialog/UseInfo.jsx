@@ -87,19 +87,19 @@ function DialogUse({ storeData, dialogRef }) {
     (currentTime) => ({
       timestamp: serverTimestamp(),
       code: storeData?.code,
-      num: storeData?.num,
-      date: storeData?.date,
+      num: parseInt(storeData?.remainTime / storeData?.storeTicketTime),
+      //date: storeData?.date,
       storeName: storeData?.storeName,
-      time: storeData?.time,
+      remainTime: storeData?.remainTime,
       startTime: formateDate(currentTime),
-      endTime: formateDate2(currentTime, storeData?.time),
+      endTime: formateDate2(currentTime, storeData?.remainTime),
     }),
     [
       storeData?.storeName,
-      storeData?.num,
       storeData?.code,
-      storeData?.date,
-      storeData?.time,
+      //storeData?.date,
+      storeData?.remainTime,
+      storeData?.storeTicketTime,
     ]
   );
   const handleParkingStart = useCallback(async () => {

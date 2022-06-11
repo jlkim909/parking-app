@@ -68,17 +68,17 @@ function DialogShare({ storeData, dialogRef }) {
     () => ({
       timestamp: serverTimestamp(),
       code: storeData?.code,
-      num: storeData?.num,
-      date: storeData?.date,
+      num: parseInt(storeData?.remainTime / storeData?.storeTicketTime),
+      //date: storeData?.date,
       storeName: storeData?.storeName,
-      time: storeData?.time,
+      remainTime: storeData?.remainTime,
     }),
     [
       storeData?.storeName,
-      storeData?.num,
+      storeData?.storeTicketTime,
       storeData?.code,
-      storeData?.date,
-      storeData?.time,
+      //storeData?.date,
+      storeData?.remainTime,
     ]
   );
   const findRecipient = useCallback(

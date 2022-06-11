@@ -1,25 +1,6 @@
 import React, { useCallback } from "react";
-import { FaSchool, FaCoins, FaParking } from "react-icons/fa";
-import { IoMdCafe } from "react-icons/io";
-import { MdLocalHospital } from "react-icons/md";
-import { CgHello } from "react-icons/cg";
+import { CategoryIcon } from "../../Proprietor/SearchStore";
 
-function CategoryIcon({ category }) {
-  switch (category) {
-    case "주차장":
-      return <FaParking style={{ color: "#f96363" }} />;
-    case "병원":
-      return <MdLocalHospital style={{ color: "#f96363" }} />;
-    case "카페":
-      return <IoMdCafe style={{ color: "#f96363" }} />;
-    case "학교":
-      return <FaSchool style={{ color: "#f96363" }} />;
-    case "은행":
-      return <FaCoins style={{ color: "#f96363" }} />;
-    default:
-      return <CgHello style={{ color: "#f96363" }} />;
-  }
-}
 function SearchListItem({ parkingName, category, address, setUserPosition }) {
   const onClickItem = useCallback(() => {
     var geocoder = new window.kakao.maps.services.Geocoder();

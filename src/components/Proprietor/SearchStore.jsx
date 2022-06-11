@@ -6,15 +6,17 @@ import { CgHello } from "react-icons/cg";
 
 export function CategoryIcon({ category }) {
   switch (category) {
-    case "주차장":
+    case "PK6":
       return <FaParking style={{ color: "#f96363", fontSize: "2rem" }} />;
-    case "병원":
+    case "HP8":
       return <MdLocalHospital style={{ color: "#f96363", fontSize: "2rem" }} />;
-    case "카페":
+    case "CE7":
       return <IoMdCafe style={{ color: "#f96363", fontSize: "2rem" }} />;
-    case "학교":
+    case "SC4":
       return <FaSchool style={{ color: "#f96363", fontSize: "2rem" }} />;
-    case "은행":
+    case "BK9":
+      return <FaCoins style={{ color: "#f96363", fontSize: "2rem" }} />;
+    case "MT1":
       return <FaCoins style={{ color: "#f96363", fontSize: "2rem" }} />;
     default:
       return <CgHello style={{ color: "#f96363", fontSize: "2rem" }} />;

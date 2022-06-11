@@ -50,7 +50,7 @@ function PayItem({ data }) {
         >
           {data?.storeName}
         </span>
-        <span>{data?.time}분</span>
+        <span>{data?.remainTime}분</span>
         <span
           style={{
             width: "35%",

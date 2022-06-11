@@ -73,16 +73,16 @@ function InUse({ handlePage }) {
       timestamp: serverTimestamp(),
       code: inUseTicket?.code,
       num: inUseTicket?.num,
-      date: inUseTicket?.date,
+      //date: inUseTicket?.date,
       storeName: inUseTicket?.storeName,
-      time: inUseTicket?.time,
+      remainTime: inUseTicket?.remainTime,
     }),
     [
       inUseTicket?.storeName,
       inUseTicket?.num,
       inUseTicket?.code,
-      inUseTicket?.date,
-      inUseTicket?.time,
+      //inUseTicket?.date,
+      inUseTicket?.remainTime,
     ]
   );
   const handleLogout = useCallback(async () => {
@@ -182,7 +182,9 @@ function InUse({ handlePage }) {
             </div>
             <div className="flex items-center w-[85%] h-[30%] justify-end">
               <IoTimerOutline className="text-[1.5rem]" />
-              <span className="font-bold ml-2">{inUseTicket?.time}분</span>
+              <span className="font-bold ml-2">
+                {inUseTicket?.remainTime}분
+              </span>
             </div>
             <EndButton onClick={handleEndTicket}>사용 종료</EndButton>
           </>

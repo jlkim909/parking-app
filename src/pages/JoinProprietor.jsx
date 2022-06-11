@@ -61,7 +61,7 @@ function JoinProprietor() {
     setSearchKeyword(store.place_name);
     setStoreAddress(store.address_name);
     setStorePhoneNum(store.phone);
-    setStoreCode(store.category_group_name);
+    setStoreCode(store.category_group_code);
     setStorePosition({ x: store.x, y: store.y });
     setShowKeyword(false);
     setSearchData([]);
@@ -144,6 +144,8 @@ function JoinProprietor() {
           ticketTime: ticketTime,
           parkingSpace: parkingSpace,
           fullTime: fullTime,
+          x: storePosition?.x,
+          y: storePosition?.y,
         });
         await set(ref(getDatabase(), "store/" + storeName), {
           name: user.displayName,

@@ -76,10 +76,6 @@ function Home() {
     setDialogData(data);
   };
 
-  // const testData = get(
-  //   ref(getDatabase(), "users/" + user.currentUser.uid + "/ticket")
-  // );
-  // console.log(testData);
   useEffect(() => {
     if (!user.currentUser) return;
     async function getTicket() {
