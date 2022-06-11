@@ -33,12 +33,12 @@ function QR() {
       code: data?.code,
       storeCode: data?.storeCode,
       storeName: data?.storeName,
-      storeTicketTime: data?.ticketTime,
+      storeTicketTime: data?.storeTicketTime,
       remainTime: keep?.val()
-        ? keep?.val().time + data?.ticketTime
-        : data?.ticketTime,
+        ? keep?.val().remainTime + data?.storeTicketTime
+        : data?.storeTicketTime,
     }),
-    [data?.storeName, data?.storeCode, data?.code, data?.ticketTime]
+    [data?.storeName, data?.storeCode, data?.code, data?.storeTicketTime]
   );
   const registerTicket = useCallback(async () => {
     if (!data) return;
