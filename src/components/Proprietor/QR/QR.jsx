@@ -4,13 +4,7 @@ import "../../../firebase";
 import { get, ref, getDatabase } from "firebase/database";
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
-// const ticket = encodeURIComponent(JSON.stringify({
-//     storeName:"E-Mart",
-//     code:"MT1",
-//     num:5,
-//     date:"2022.06.05 03:37",
-//     time:30
-//   }))
+
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -25,19 +19,30 @@ const Container = styled.div`
 function QR() {
   const { user } = useSelector((state) => state);
   const [qrData, setQrData] = useState({});
+
   useEffect(() => {
     if (!user.currentUser) return;
     async function getTicket() {
       const snapShot = await get(
         ref(getDatabase(), "users/proprietor/" + user.currentUser.uid)
       );
-      setQrData(snapShot.val() ? snapShot.val() : {});
+      setQrData(
+        snapShot.val()
+          ? {
+              code: snapShot.val().code,
+              storeCode: snapShot.val().storeCode,
+              storeName: snapShot.val().storeName,
+              storeTicketTime: snapShot.val().ticketTime,
+            }
+          : {}
+      );
     }
     getTicket();
     return () => {
       setQrData([]);
     };
   }, [user.currentUser]);
+
   return (
     <Container>
       <QRCode
