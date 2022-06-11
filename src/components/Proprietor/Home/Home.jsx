@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
+import CurrentTicketItem from "./CurrentTicketItem";
 
 const Container = styled.div`
   position: relative;
@@ -21,17 +22,6 @@ const ItemContainer = styled.div`
   border-radius: 8px;
   background-color: white;
   overflow: scroll;
-`;
-const Item = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 20vh;
-  background-color: white;
-  border: 2vw solid #ece6cc;
-  box-shadow: 2px 2px 4px lightgray;
-  font-weight: bold;
-  color: #505050;
 `;
 
 const OnOffContinaer = styled.div`
@@ -66,18 +56,12 @@ function Home() {
         <span className="ml-2">5 / 10</span>
       </div>
       <ItemContainer>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
-        <Item>h</Item>
+        <CurrentTicketItem />
+        <CurrentTicketItem />
+        <CurrentTicketItem />
+        <CurrentTicketItem />
+        <CurrentTicketItem />
       </ItemContainer>
-
       <OnOffContinaer
         style={{ backgroundColor: onOff ? "#61BFAD" : "#FF8B8B" }}
       >
