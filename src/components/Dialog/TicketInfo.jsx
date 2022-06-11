@@ -40,12 +40,12 @@ const DialogBtn = styled.div`
   color: white;
 `;
 
-function DialogTicket({ storeData, dialogRef, page }) {
+function DialogTicket({ selectTicket, dialogRef, page }) {
   return (
     <Container>
       <Header>
         <IoShareOutline className="text-2xl" onClick={page("SHARE")} />
-        <p className="text-base font-bold">{storeData?.storeName}</p>
+        <p className="text-base font-bold">{selectTicket?.storeName}</p>
         <IoCloseSharp
           className="text-2xl"
           onClick={() => dialogRef.current.close()}
@@ -53,12 +53,13 @@ function DialogTicket({ storeData, dialogRef, page }) {
       </Header>
       <Body>
         <span className="font-bold mt-[-10%]">영업시간 10 : 00 ~ 22 : 00</span>
-        <Ticket category={storeData?.code} size={80} />
+        <Ticket category={selectTicket?.code} size={80} />
         <div className="flex items-center font-bold w-[90%]">
           <IoTimerOutline className="text-3xl" />
-          <span className="text-xl ml-1">{storeData?.remainTime}분</span>
+          <span className="text-xl ml-1">{selectTicket?.remainTime}분</span>
           <span className="text-[#505050] text-3xl ml-[40%] mt-[-30%]">
-            x {parseInt(storeData?.remainTime / storeData?.storeTicketTime)}
+            x{" "}
+            {parseInt(selectTicket?.remainTime / selectTicket?.storeTicketTime)}
           </span>
         </div>
       </Body>

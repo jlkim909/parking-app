@@ -60,25 +60,25 @@ const DialogBtn = styled.div`
   font-size: 1.2rem;
 `;
 
-function DialogShare({ storeData, dialogRef }) {
+function DialogShare({ selectTicket, dialogRef }) {
   const { user } = useSelector((state) => state);
   const [recipient, setRecipient] = useState([]);
   const [recipientId, setRecipientId] = useState("");
   const createInUseTicket = useCallback(
     () => ({
       timestamp: serverTimestamp(),
-      code: storeData?.code,
-      num: parseInt(storeData?.remainTime / storeData?.storeTicketTime),
-      //date: storeData?.date,
-      storeName: storeData?.storeName,
-      remainTime: storeData?.remainTime,
+      code: selectTicket?.code,
+      num: parseInt(selectTicket?.remainTime / selectTicket?.storeTicketTime),
+      //date: selectTicket?.date,
+      storeName: selectTicket?.storeName,
+      remainTime: selectTicket?.remainTime,
     }),
     [
-      storeData?.storeName,
-      storeData?.storeTicketTime,
-      storeData?.code,
-      //storeData?.date,
-      storeData?.remainTime,
+      selectTicket?.storeName,
+      selectTicket?.storeTicketTime,
+      selectTicket?.code,
+      //selectTicket?.date,
+      selectTicket?.remainTime,
     ]
   );
   const findRecipient = useCallback(
@@ -89,12 +89,12 @@ function DialogShare({ storeData, dialogRef }) {
   );
   const handleSend = useCallback(async () => {
     const recipientUser = findRecipient(recipientId);
-    if (!storeData || !recipient || !recipientUser) return;
+    if (!selectTicket || !recipient || !recipientUser) return;
     try {
       await set(
         ref(
           getDatabase(),
-          "users/" + recipientUser + "/giftbox/" + storeData?.storeName
+          "users/" + recipientUser + "/giftbox/" + selectTicket?.storeName
         ),
         createInUseTicket()
       );
@@ -107,7 +107,7 @@ function DialogShare({ storeData, dialogRef }) {
     dialogRef,
     findRecipient,
     recipientId,
-    storeData,
+    selectTicket,
     recipient,
   ]);
 
@@ -133,8 +133,8 @@ function DialogShare({ storeData, dialogRef }) {
       </Header>
       <Body>
         <TextContainer>
-          <Ticket category={storeData?.code} size={50} />
-          <span style={{ fontSize: "1rem" }}>{storeData?.storeName}</span>
+          <Ticket category={selectTicket?.code} size={50} />
+          <span style={{ fontSize: "1rem" }}>{selectTicket?.storeName}</span>
         </TextContainer>
         <TextContainer>
           <p>대상 ID</p>

@@ -62,7 +62,7 @@ function Home() {
   const { user } = useSelector((state) => state);
   const [category, setCategory] = useState("ALL");
   const [dialogData, setDialogData] = useState();
-  const [ticket, setTicket] = useState([]);
+  const [ticketList, setTicket] = useState([]);
   const dialogRef = useRef(null);
   const onClickTag = (code) => () => {
     if (category === code) {
@@ -134,25 +134,25 @@ function Home() {
         </TagItem>
       </TagContainer>
       <TicketContainer>
-        {ticket?.length > 0 ? (
-          ticket?.map((store, index) => {
-            if (category === "ALL" || category === store.code) {
+        {ticketList?.length > 0 ? (
+          ticketList?.map((ticket, index) => {
+            if (category === "ALL" || category === ticket.code) {
               return (
                 <TicketItem
                   className="flex flex-col text-center"
                   key={index}
-                  onClick={onClickTicket(store)}
+                  onClick={onClickTicket(ticket)}
                 >
-                  <Ticket category={store.code} size={60} />
+                  <Ticket category={ticket.code} size={60} />
                   <p className="mt-[4%] font-bold text-[#303030]">
-                    {store.storeName.indexOf(" ") > 0
-                      ? store.storeName.slice(0, store.storeName.indexOf(" "))
-                      : store.storeName}
+                    {ticket.storeName.indexOf(" ") > 0
+                      ? ticket.storeName.slice(0, ticket.storeName.indexOf(" "))
+                      : ticket.storeName}
                     <br />
-                    {store.storeName.indexOf(" ") > 0
-                      ? store.storeName.slice(
-                          store.storeName.indexOf(" "),
-                          store.storeName.length
+                    {ticket.storeName.indexOf(" ") > 0
+                      ? ticket.storeName.slice(
+                          ticket.storeName.indexOf(" "),
+                          ticket.storeName.length
                         )
                       : ""}
                   </p>
@@ -166,7 +166,7 @@ function Home() {
           <NoTicket />
         )}
       </TicketContainer>
-      <Dialog dialogRef={dialogRef} storeData={dialogData} />
+      <Dialog dialogRef={dialogRef} selectTicket={dialogData} />
     </Container>
   );
 }

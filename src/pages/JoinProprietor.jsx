@@ -298,7 +298,7 @@ function JoinProprietor() {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  사용자 정보 입력
+                  사업자 정보 입력
                 </Typography>
               </Grid>
               <Grid item xs={12}>

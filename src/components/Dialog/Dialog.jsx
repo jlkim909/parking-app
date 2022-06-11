@@ -14,7 +14,7 @@ const Container = styled.dialog`
   }
 `;
 
-function Dialog({ dialogRef, storeData }) {
+function Dialog({ dialogRef, selectTicket }) {
   const [dialogPage, setDialogPage] = useState("INFO");
   const handlePage = useCallback(
     (mode) => () => {
@@ -25,13 +25,13 @@ function Dialog({ dialogRef, storeData }) {
   return (
     <Container ref={dialogRef} onClose={() => setDialogPage("INFO")}>
       {dialogPage === "USE" ? (
-        <UseInfo dialogRef={dialogRef} storeData={storeData} />
+        <UseInfo dialogRef={dialogRef} selectTicket={selectTicket} />
       ) : dialogPage === "SHARE" ? (
-        <ShareInfo dialogRef={dialogRef} storeData={storeData} />
+        <ShareInfo dialogRef={dialogRef} selectTicket={selectTicket} />
       ) : (
         <TicketInfo
           dialogRef={dialogRef}
-          storeData={storeData}
+          selectTicket={selectTicket}
           page={handlePage}
         />
       )}

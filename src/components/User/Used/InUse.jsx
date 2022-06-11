@@ -65,15 +65,30 @@ const EndButton = styled.div`
   box-shadow: 2px 2px 4px lightgray;
 `;
 
+const formateDate = (millisecond) => {
+  const tempTime = new Date(millisecond);
+  let hours = tempTime.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+
+  let minutes = tempTime.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${hours} : ${minutes}`;
+};
+
 function InUse({ handlePage }) {
   const { user } = useSelector((state) => state);
   const [inUseTicket, setInUseTicket] = useState();
+
   const createUsedTicket = useCallback(
     () => ({
       timestamp: serverTimestamp(),
       code: inUseTicket?.code,
       num: inUseTicket?.num,
-      //date: inUseTicket?.date,
       storeName: inUseTicket?.storeName,
       remainTime: inUseTicket?.remainTime,
     }),
@@ -81,7 +96,6 @@ function InUse({ handlePage }) {
       inUseTicket?.storeName,
       inUseTicket?.num,
       inUseTicket?.code,
-      //inUseTicket?.date,
       inUseTicket?.remainTime,
     ]
   );
@@ -126,12 +140,13 @@ function InUse({ handlePage }) {
       setInUseTicket();
     };
   }, [user.currentUser]);
+
   return (
     <Container>
       <UserInfoConatainer>
         <div className="flex mt-4 ml-5 gap-2">
           <MdPortrait className="text-5xl text-[#9e9e9e]" />
-          <span className="font-bold text-xl mt-4">OOO 님</span>
+          <span className="font-bold text-xl mt-4">{`${user?.currentUser.displayName}님`}</span>
         </div>
         <div className="flex justify-evenly mt-9 gap-12">
           <div
@@ -174,17 +189,24 @@ function InUse({ handlePage }) {
             </div>
             <div className="flex text-[#707070] font-bold items-center justify-between w-[85%] h-[20%]">
               <span className="text-base">이용 시작 시간</span>
-              <span>{inUseTicket.startTime}</span>
+              <span>{formateDate(inUseTicket?.timestamp)}</span>
             </div>
             <div className="flex text-[#707070] font-bold items-center justify-between w-[85%]">
               <span className="text-base">이용 종료 시간</span>
-              <span>{inUseTicket.endTime}</span>
-            </div>
-            <div className="flex items-center w-[85%] h-[30%] justify-end">
-              <IoTimerOutline className="text-[1.5rem]" />
-              <span className="font-bold ml-2">
-                {inUseTicket?.remainTime}분
+              <span>
+                {formateDate(
+                  inUseTicket?.timestamp + inUseTicket.remainTime * 60000
+                )}
               </span>
+            </div>
+            <div className="flex items-center w-[85%] h-[30%] justify-between">
+              <span>{inUseTicket?.carNum}</span>
+              <div className="flex items-center">
+                <IoTimerOutline className="text-[1.5rem]" />
+                <span className="font-bold ml-2">
+                  {inUseTicket?.remainTime}분
+                </span>
+              </div>
             </div>
             <EndButton onClick={handleEndTicket}>사용 종료</EndButton>
           </>
