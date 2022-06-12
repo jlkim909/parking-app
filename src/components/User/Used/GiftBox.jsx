@@ -32,7 +32,6 @@ function GiftBox() {
       setTicket([]);
     };
   }, [user.currentUser]);
-  console.log(ticket);
   return (
     <Container>
       {ticket?.map((value, index) => (

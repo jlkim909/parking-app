@@ -56,8 +56,6 @@ function JoinProprietor() {
   const [loading, setLoading] = useState(false);
 
   const handleStore = (store) => {
-    //setCurrentStore(store);
-    console.log(store);
     setSearchKeyword(store.place_name);
     setStoreAddress(store.address_name);
     setStorePhoneNum(store.phone);

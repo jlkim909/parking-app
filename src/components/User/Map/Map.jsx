@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import "../../../firebase";
 import { get, child, ref, getDatabase } from "firebase/database";
 import { useState } from "react";
+import Dialog from "../../Dialog/Dialog";
 
 const MapContainer = styled.div`
   width: 92%;
@@ -42,9 +43,12 @@ const ticketShowNum = (num) => {
 
 function Map({ map, ps, userPosition }) {
   const mapRef = useRef(null);
+  const dialogRef = useRef(null);
   const { user } = useSelector((state) => state);
   const [store, setStore] = useState([]);
+  const [dialogData, setDialogData] = useState({});
   const [ticketList, setTicketList] = useState([]);
+
   const setStoreMarker = useCallback(() => {
     if (!store) return;
     for (let index = 0; index < store.length; index++) {
@@ -61,13 +65,19 @@ function Map({ map, ps, userPosition }) {
       );
       const markerImage = new window.kakao.maps.MarkerImage(
         ticketShowNum(ticketCnt),
-        new window.kakao.maps.Size(40, 45),
+        new window.kakao.maps.Size(30, 40),
         new window.kakao.maps.Point(20, 40)
       );
       var marker = new window.kakao.maps.Marker({
         position: markerPosition,
         image: markerImage,
       });
+      if (!!hadTicket) {
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          dialogRef.current.showModal();
+          setDialogData(hadTicket);
+        });
+      }
       marker.setMap(map.current);
     }
   }, [map, store, ticketList]);
@@ -127,7 +137,11 @@ function Map({ map, ps, userPosition }) {
     };
   }, [user.currentUser]);
 
-  return <MapContainer ref={mapRef}></MapContainer>;
+  return (
+    <MapContainer ref={mapRef}>
+      <Dialog dialogRef={dialogRef} selectTicket={dialogData} />
+    </MapContainer>
+  );
 }
 
 export default memo(Map);

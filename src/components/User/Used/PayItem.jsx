@@ -22,22 +22,30 @@ const Item = styled.div`
 
 const formateDate = (millisecond) => {
   const tempTime = new Date(millisecond);
-  let date = tempTime.getDate();
-  if (date < 10) {
-    date = `0${date}`;
+
+  const year = tempTime.getFullYear();
+  let Month = tempTime.getMonth() + 1;
+  if (Month < 10) {
+    Month = `0${Month}`;
   }
 
-  let month = tempTime.getMonth() + 1;
-  if (month < 10) {
-    month = `0${month}`;
+  let Day = tempTime.getDate();
+  if (Day < 10) {
+    Day = `0${Day}`;
+  }
+  let hours = tempTime.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
   }
 
-  let year = tempTime.getFullYear();
-  return `${year}/${month}/${date}`;
+  let minutes = tempTime.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${year}/${Month}/${Day} ${hours} : ${minutes}`;
 };
 function PayItem({ data }) {
-  const tempTime = new Date(data?.timestamp);
-  console.log(tempTime);
   return (
     <Container>
       <Item>

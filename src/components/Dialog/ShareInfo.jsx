@@ -69,15 +69,15 @@ function DialogShare({ selectTicket, dialogRef }) {
       timestamp: serverTimestamp(),
       code: selectTicket?.code,
       num: parseInt(selectTicket?.remainTime / selectTicket?.storeTicketTime),
-      //date: selectTicket?.date,
+      sender: user?.currentUser.displayName,
       storeName: selectTicket?.storeName,
       remainTime: selectTicket?.remainTime,
     }),
     [
+      user,
       selectTicket?.storeName,
       selectTicket?.storeTicketTime,
       selectTicket?.code,
-      //selectTicket?.date,
       selectTicket?.remainTime,
     ]
   );

@@ -60,7 +60,6 @@ const TicketItem = styled.div`
 
 function Home() {
   const { user } = useSelector((state) => state);
-  console.log(user);
   const [category, setCategory] = useState("ALL");
   const [dialogData, setDialogData] = useState();
   const [ticketList, setTicket] = useState([]);

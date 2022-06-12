@@ -61,6 +61,7 @@ function QR() {
       console.error(error);
     }
   }, [data, user.currentUser?.uid, createTicket]);
+
   return (
     <Container>
       <QrReader
@@ -76,9 +77,10 @@ function QR() {
         constraints={{
           facingMode: "environment",
         }}
-        style={{ width: "100%" }}
+        containerStyle={{ width: "100%", display: data ? "none" : "flex" }}
       />
-      <div style={{ height: "40%" }}>
+
+      <div style={{ display: "flex", width: "100%", height: "40%" }}>
         <span>{data?.storeName}</span>
         <br />
         <span>{data?.time}분</span>
