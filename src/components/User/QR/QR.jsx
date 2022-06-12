@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import "../../../firebase";
 import { getDatabase, ref, serverTimestamp, set, get } from "firebase/database";
 import { useSelector } from "react-redux";
+import Dialog from "../../Dialog/Dialog";
 const Container = styled.div`
   position: relative;
   width: 100%;
@@ -27,6 +28,7 @@ const ConfirmButton = styled.div`
 function QR() {
   const { user } = useSelector((state) => state);
   const [data, setData] = useState();
+  const dialogRef = useRef(null);
   const createTicket = useCallback(
     (keep) => ({
       timestamp: serverTimestamp(),
@@ -67,9 +69,8 @@ function QR() {
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
-            alert("스캔이 완료되었어요.");
+            dialogRef.current.showModal();
             setData(JSON.parse(decodeURIComponent(result?.text)));
-            result = null;
           }
 
           if (!!error) {
@@ -88,6 +89,7 @@ function QR() {
         <span>{data?.time}분</span>
         <ConfirmButton onClick={registerTicket}>등록하기</ConfirmButton>
       </div>
+      <Dialog dialogRef={dialogRef} />
     </Container>
   );
 }
