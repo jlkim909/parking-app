@@ -115,11 +115,13 @@ function Home() {
     <Container>
       <div className="flex mt-[2%] h-[8%] w-[90%] items-center font-bold">
         <span>현재상황 : </span>
-        <span className="ml-2">5 / 10</span>
+        <span className="ml-2">{currentParkinglot?.length} / 10</span>
       </div>
       <ItemContainer>
         {currentParkinglot
-          ? currentParkinglot.map((value) => <CurrentTicketItem data={value} />)
+          ? currentParkinglot.map((value, index) => (
+              <CurrentTicketItem key={index} data={value} />
+            ))
           : "없음"}
       </ItemContainer>
       <OnOffContinaer

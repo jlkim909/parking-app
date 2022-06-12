@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import "../../firebase";
 import {
@@ -64,6 +64,7 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
   const { user } = useSelector((state) => state);
   const [carNum, setCarNum] = useState("");
   const [useTicketNum, setUseTicketNum] = useState(1);
+  const [userInfo, setUserInfo] = useState({});
 
   const createInUseTicket = useCallback(
     () => ({
@@ -167,6 +168,22 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
     isSendValidate,
   ]);
 
+  useEffect(() => {
+    if (!user.currentUser) return;
+    async function getTicket() {
+      const snapShot = await get(
+        ref(getDatabase(), "users/" + user.currentUser.uid)
+      );
+      if (!!snapShot.val()) {
+        setUserInfo(snapShot.val() ? snapShot.val() : null);
+      }
+    }
+    getTicket();
+    return () => {
+      setUserInfo();
+    };
+  }, [user.currentUser]);
+
   return (
     <Container>
       <Header>
@@ -187,7 +204,7 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
       <Body>
         <TextContainer>
           <p>연락처</p>
-          <span>010 - 4992 - 4193</span>
+          <span>{userInfo?.phoneNum}</span>
         </TextContainer>
         <TextContainer>
           <p>차량번호</p>
