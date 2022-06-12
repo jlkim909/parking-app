@@ -67,8 +67,9 @@ function QR() {
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
+            alert("스캔이 완료되었어요.");
             setData(JSON.parse(decodeURIComponent(result?.text)));
-            return;
+            result = null;
           }
 
           if (!!error) {
