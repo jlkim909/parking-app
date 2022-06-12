@@ -5,7 +5,8 @@ import JoinUser from "./JoinUser";
 
 function Join() {
   const { mode } = useSelector((state) => state.user);
-  if (mode === "user") {
+  console.log(mode);
+  if (mode === "CLIENT") {
     return <JoinUser />;
   } else {
     return <JoinProprietor />;

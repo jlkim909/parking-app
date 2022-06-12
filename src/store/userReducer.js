@@ -9,7 +9,7 @@ export const setMode = (mode) => ({type:SET_MODE, currentMode:mode})
 const initialState = {
   currentUser: null,
   isLoading: true,
-  mode:"user"
+  mode:"CLIENT"
 };
 
 const userReducer = (state = initialState, action) => {
@@ -18,6 +18,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.currentUser,
+        phoneNum:action.phoneNum,
         isLoading: false,
       };
     case CLEAR_USER:
@@ -26,13 +27,15 @@ const userReducer = (state = initialState, action) => {
         currentUser: null,
         isLoading: false,
       };
-      case SET_MODE:
-        return {
-          ...state,
-          mode:action.currentMode,
-        };
+    case SET_MODE:
+      return {
+        ...state,
+        mode:action.currentMode,
+      };
     default:
-      return state;
+      return{
+        ...state
+      }
   }
 };
 

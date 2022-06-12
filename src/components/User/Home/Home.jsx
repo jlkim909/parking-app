@@ -60,6 +60,7 @@ const TicketItem = styled.div`
 
 function Home({ handlePage }) {
   const { user } = useSelector((state) => state);
+  const { client } = useSelector((state) => state);
   const [category, setCategory] = useState("ALL");
   const [dialogData, setDialogData] = useState();
   const [ticketList, setTicket] = useState([]);
@@ -89,6 +90,8 @@ function Home({ handlePage }) {
       setTicket([]);
     };
   }, [user.currentUser]);
+
+  console.log(client);
   return (
     <Container>
       <TagContainer>

@@ -5,22 +5,36 @@ import { Link } from "react-router-dom";
 import "../firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import loginImg from "../image/loginlogo.png";
-import { setMode } from "../store/userReducer";
+import { setData } from "../store/clientReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { get, child, ref, getDatabase } from "firebase/database";
+import { setMode } from "../store/userReducer";
+
 function Login({ client, setClient }) {
   const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { mode } = useSelector((state) => state.user);
-  const loginUser = useCallback(async (email, password) => {
-    setLoading(true);
-    try {
-      await signInWithEmailAndPassword(getAuth(), email, password);
-    } catch (e) {
-      setError(e.message);
-      setLoading(false);
-    }
-  }, []);
+  const loginUser = useCallback(
+    async (email, password) => {
+      setLoading(true);
+      try {
+        const { user } = await signInWithEmailAndPassword(
+          getAuth(),
+          email,
+          password
+        );
+        const snapShot = await get(
+          child(ref(getDatabase()), "users/" + user?.uid)
+        );
+        dispatch(setData(snapShot.val()));
+      } catch (e) {
+        setError(e.message);
+        setLoading(false);
+      }
+    },
+    [dispatch]
+  );
 
   const handleSubmit = useCallback(
     (event) => {
@@ -71,7 +85,7 @@ function Login({ client, setClient }) {
         >
           <Box
             sx={{
-              backgroundColor: mode === "user" ? "#ECE6CC" : "white",
+              backgroundColor: mode === "CLIENT" ? "#ECE6CC" : "white",
               width: "40vw",
               height: "4vh",
               color: "#707070",
@@ -82,13 +96,13 @@ function Login({ client, setClient }) {
               fontSize: "0.75rem",
               fontWeight: "bold",
             }}
-            onClick={() => dispatch(setMode("user"))}
+            onClick={() => dispatch(setMode("CLIENT"))}
           >
             고객용
           </Box>
           <Box
             sx={{
-              backgroundColor: mode === "proprietor" ? "#ECE6CC" : "white",
+              backgroundColor: mode === "PROPRIETOR" ? "#ECE6CC" : "white",
               width: "40vw",
               height: "4vh",
               color: "#707070",
@@ -99,7 +113,7 @@ function Login({ client, setClient }) {
               fontSize: "0.75rem",
               fontWeight: "bold",
             }}
-            onClick={() => dispatch(setMode("proprietor"))}
+            onClick={() => dispatch(setMode("PROPRIETOR"))}
           >
             사업자용
           </Box>
