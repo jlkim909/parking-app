@@ -68,8 +68,8 @@ function QR() {
     <Container>
       <QrReader
         onResult={(result, error) => {
-          if (!!result) {
-            dialogRef.current.showModal();
+          if (!!result && !data) {
+            alert("스캔 완료!!");
             setData(JSON.parse(decodeURIComponent(result?.text)));
           }
 
