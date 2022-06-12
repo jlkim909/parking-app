@@ -115,7 +115,11 @@ function My() {
             <span className="text-xs">open</span>
           </div>
           <Box>
-            <span>09:00</span>~<span>22:00</span>
+            <span>
+              {
+                <span>{`${storeData?.openHour}:${storeData?.openMinute} ~ ${storeData?.closeHour}:${storeData?.closeMinute}`}</span>
+              }
+            </span>
           </Box>
         </Box>
         <Box className="h-[30%]">

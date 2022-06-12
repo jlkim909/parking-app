@@ -26,7 +26,7 @@ function User() {
       ) : page === "MAP" ? (
         <ParkinglotMap />
       ) : page === "QR" ? (
-        <QR />
+        <QR handlePage={setPage} />
       ) : page === "GIFT" ? (
         <GiftBox />
       ) : page === "PAYCHECK" ? (

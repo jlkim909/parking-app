@@ -61,7 +61,7 @@ const Box = styled.div`
   width: 100%;
 `;
 
-function QR() {
+function QR({ handlePage }) {
   const { user } = useSelector((state) => state);
   const [data, setData] = useState();
   const createTicket = useCallback(
@@ -96,14 +96,14 @@ function QR() {
     } catch (error) {
       console.error(error);
     }
-  }, [data, user.currentUser?.uid, createTicket]);
+    handlePage("HOME");
+  }, [data, user.currentUser?.uid, createTicket, handlePage]);
 
   return (
     <Container>
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
-            console.log(result);
             setData(JSON.parse(decodeURIComponent(result?.text)));
           }
 
@@ -152,11 +152,11 @@ function QR() {
           </Box>
           <Box className="mt-[20%]">
             <IoTimerOutline className="text-5xl" />
-            <span className="text-3xl">{`${data?.ticketTime}분`}</span>
+            <span className="text-3xl">{`${data?.storeTicketTime}분`}</span>
           </Box>
           <Box className="mt-[40%] h-[10%]">
             <ConfirmButton onClick={registerTicket}>등록하기</ConfirmButton>
-            <RefreshButton>
+            <RefreshButton onClick={() => setData({})}>
               <IoMdRefresh className="text-2xl" />
             </RefreshButton>
           </Box>
