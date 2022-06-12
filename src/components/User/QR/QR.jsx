@@ -28,14 +28,6 @@ const ConfirmButton = styled.div`
 function QR() {
   const { user } = useSelector((state) => state);
   const [data, setData] = useState();
-  const [scaned, setScaned] = useState(true);
-  const dialogRef = useRef(null);
-
-  const onBarCodeRead = () => {
-    if (!scaned) return;
-    setScaned(false);
-    alert("QR Code", [{ text: "OK", onPress: () => setScaned(true) }]);
-  };
 
   const createTicket = useCallback(
     (keep) => ({
@@ -66,7 +58,6 @@ function QR() {
         ),
         createTicket(keep)
       );
-      //setData();
     } catch (error) {
       console.error(error);
     }
@@ -75,11 +66,8 @@ function QR() {
   return (
     <Container>
       <QrReader
-        viewFinder="fsdfds"
         onResult={(result, error) => {
-          if (!!data) return;
           if (!!result) {
-            onBarCodeRead();
             setData(JSON.parse(decodeURIComponent(result?.text)));
           }
 
@@ -99,7 +87,6 @@ function QR() {
         <span>{data?.time}분</span>
         <ConfirmButton onClick={registerTicket}>등록하기</ConfirmButton>
       </div>
-      <Dialog dialogRef={dialogRef} />
     </Container>
   );
 }
