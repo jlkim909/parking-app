@@ -1,10 +1,9 @@
 import styled from "@emotion/styled";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import "../../../firebase";
 import { getDatabase, ref, serverTimestamp, set, get } from "firebase/database";
 import { useSelector } from "react-redux";
-import Dialog from "../../Dialog/Dialog";
 const Container = styled.div`
   position: relative;
   width: 100%;
@@ -68,6 +67,7 @@ function QR() {
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
+            console.log(result);
             setData(JSON.parse(decodeURIComponent(result?.text)));
           }
 
