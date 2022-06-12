@@ -2,7 +2,14 @@ import styled from "@emotion/styled";
 import React, { useCallback, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import "../../firebase";
-import { getDatabase, ref, set, get, serverTimestamp } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  serverTimestamp,
+  remove,
+} from "firebase/database";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -53,34 +60,7 @@ const DialogBtn = styled.div`
   font-size: 1.2rem;
 `;
 
-// const formateDate = (dateData) => {
-//   let hours = dateData.getHours();
-//   if (hours < 10) {
-//     hours = `0${hours}`;
-//   }
-
-//   let minutes = dateData.getMinutes() + 1;
-//   if (minutes < 10) {
-//     minutes = `0${minutes}`;
-//   }
-//   return `${hours} : ${minutes}`;
-// };
-
-// const formateDate2 = (dateData, time) => {
-//   dateData.setMinutes(dateData.getMinutes() + time);
-//   let hours = dateData.getHours();
-//   if (hours < 10) {
-//     hours = `0${hours}`;
-//   }
-
-//   let minutes = dateData.getMinutes() + 1;
-//   if (minutes < 10) {
-//     minutes = `0${minutes}`;
-//   }
-//   return `${hours} : ${minutes}`;
-// };
-
-function DialogUse({ selectTicket, dialogRef }) {
+function DialogUse({ selectTicket, dialogRef, chagePage }) {
   const { user } = useSelector((state) => state);
   const [carNum, setCarNum] = useState("");
   const [useTicketNum, setUseTicketNum] = useState(1);
@@ -100,6 +80,16 @@ function DialogUse({ selectTicket, dialogRef }) {
       selectTicket?.code,
       selectTicket?.storeTicketTime,
     ]
+  );
+  const createInUseUser = useCallback(
+    (user) => ({
+      timestamp: serverTimestamp(),
+      userName: user.name,
+      userPhoneNum: user.phoneNum,
+      userCarNum: carNum,
+      remainTime: selectTicket?.storeTicketTime * useTicketNum,
+    }),
+    [carNum, useTicketNum, selectTicket?.storeTicketTime]
   );
   const isSendValidate = useCallback(() => {
     if (carNum.length <= 0) return false;
@@ -123,22 +113,44 @@ function DialogUse({ selectTicket, dialogRef }) {
       const keep = await get(
         ref(getDatabase(), "users/" + user.currentUser.uid + "/inUseTicket")
       );
+      const userData = await get(
+        ref(getDatabase(), "users/" + user.currentUser.uid)
+      );
       if (!keep.val()) {
+        await remove(
+          ref(
+            getDatabase(),
+            "users/" +
+              user.currentUser.uid +
+              "/ticket/" +
+              selectTicket.storeName
+          )
+        );
         await set(
           ref(getDatabase(), "users/" + user.currentUser.uid + "/inUseTicket"),
           createInUseTicket()
         );
+        await set(
+          ref(
+            getDatabase(),
+            "users/proprietor/" + selectTicket?.storeCode + "/inUseParkinglot"
+          ),
+          createInUseUser(userData.val())
+        );
+        dialogRef.current.close();
+        chagePage("INUSE");
       } else {
         alert("이미 사용중인 티켓이 있습니다!");
       }
     } catch (error) {
       console.error(error);
     }
-    dialogRef.current.close();
   }, [
     selectTicket,
+    chagePage,
     user.currentUser?.uid,
     createInUseTicket,
+    createInUseUser,
     dialogRef,
     isSendValidate,
   ]);

@@ -156,7 +156,7 @@ function QR({ handlePage }) {
           </Box>
           <Box className="mt-[40%] h-[10%]">
             <ConfirmButton onClick={registerTicket}>등록하기</ConfirmButton>
-            <RefreshButton onClick={() => setData({})}>
+            <RefreshButton onClick={() => setData(null)}>
               <IoMdRefresh className="text-2xl" />
             </RefreshButton>
           </Box>

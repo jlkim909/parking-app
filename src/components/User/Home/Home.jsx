@@ -58,7 +58,7 @@ const TicketItem = styled.div`
   align-items: center;
 `;
 
-function Home() {
+function Home({ handlePage }) {
   const { user } = useSelector((state) => state);
   const [category, setCategory] = useState("ALL");
   const [dialogData, setDialogData] = useState();
@@ -166,7 +166,11 @@ function Home() {
           <NoTicket />
         )}
       </TicketContainer>
-      <Dialog dialogRef={dialogRef} selectTicket={dialogData} />
+      <Dialog
+        dialogRef={dialogRef}
+        selectTicket={dialogData}
+        chagePage={handlePage}
+      />
     </Container>
   );
 }

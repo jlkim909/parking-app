@@ -32,7 +32,7 @@ function User() {
       ) : page === "PAYCHECK" ? (
         <Paycheck />
       ) : (
-        <Home />
+        <Home handlePage={setPage} />
       )}
       <BottomMenu page={page} handlePage={setPage} />
     </Container>

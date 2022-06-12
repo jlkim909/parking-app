@@ -14,7 +14,7 @@ const Container = styled.dialog`
   }
 `;
 
-function Dialog({ dialogRef, selectTicket }) {
+function Dialog({ dialogRef, selectTicket, chagePage }) {
   const [dialogPage, setDialogPage] = useState("INFO");
   const handlePage = useCallback(
     (mode) => () => {
@@ -25,7 +25,11 @@ function Dialog({ dialogRef, selectTicket }) {
   return (
     <Container ref={dialogRef} onClose={() => setDialogPage("INFO")}>
       {dialogPage === "USE" ? (
-        <UseInfo dialogRef={dialogRef} selectTicket={selectTicket} />
+        <UseInfo
+          dialogRef={dialogRef}
+          selectTicket={selectTicket}
+          chagePage={chagePage}
+        />
       ) : dialogPage === "SHARE" ? (
         <ShareInfo dialogRef={dialogRef} selectTicket={selectTicket} />
       ) : (
