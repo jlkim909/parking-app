@@ -153,7 +153,11 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
         dialogRef.current.close();
         chagePage("INUSE");
       } else {
-        alert("이미 사용중인 티켓이 있습니다!");
+        if (!!keep.val()) {
+          alert("이미 사용중인 티켓이 있습니다!");
+        } else {
+          alert("현재 사용할 수 없는 시간입니다.");
+        }
       }
     } catch (error) {
       console.error(error);
