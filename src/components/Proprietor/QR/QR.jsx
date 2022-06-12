@@ -32,6 +32,11 @@ function QR() {
               code: snapShot.val().code,
               storeCode: snapShot.val().storeCode,
               storeName: snapShot.val().storeName,
+              address: snapShot.val().address,
+              phoneNum: snapShot.val().phoneNum,
+              officeHours: `${snapShot.val().openHour}:${
+                snapShot.val().openMinute
+              }~${snapShot.val().closeHour}:${snapShot.val().closeMinute}`,
               storeTicketTime: snapShot.val().ticketTime,
               x: snapShot.val().x,
               y: snapShot.val().y,
