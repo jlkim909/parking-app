@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CurrentTicketItem from "./CurrentTicketItem";
+import { useSelector } from "react-redux";
+import "../../../firebase";
+import { get, child, set, ref, getDatabase, remove } from "firebase/database";
 
 const Container = styled.div`
   position: relative;
@@ -48,7 +51,66 @@ const OnOff = styled.div`
   box-shadow: 2px 2px 4px gray;
 `;
 function Home() {
+  const { user } = useSelector((state) => state);
   const [onOff, setOnOff] = useState(true);
+  const [currentParkinglot, setCurrentParkinglot] = useState([]);
+
+  const handleOnOff = useCallback(async () => {
+    if (!user.currentUser) return;
+    try {
+      const ableParking = await get(
+        ref(
+          getDatabase(),
+          "users/proprietor/" + user.currentUser.uid + "/ableParking"
+        )
+      );
+      if (!!ableParking.val()) {
+        await remove(
+          ref(
+            getDatabase(),
+            "users/proprietor/" + user.currentUser.uid + "/ableParking"
+          )
+        );
+        setOnOff(false);
+      } else {
+        await set(
+          ref(
+            getDatabase(),
+            "users/proprietor/" + user.currentUser.uid + "/ableParking"
+          ),
+          { ableParking: true }
+        );
+        setOnOff(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [user.currentUser]);
+
+  useEffect(() => {
+    if (!user.currentUser) return;
+    async function getTicket() {
+      const snapShot = await get(
+        child(
+          ref(getDatabase()),
+          "users/proprietor/" + user.currentUser.uid + "/storeParkinglot"
+        )
+      );
+      const ableParking = await get(
+        ref(
+          getDatabase(),
+          "users/proprietor/" + user.currentUser.uid + "/ableParking"
+        )
+      );
+      setOnOff(!!ableParking.val());
+      setCurrentParkinglot(snapShot.val() ? Object.values(snapShot.val()) : []);
+    }
+    getTicket();
+    return () => {
+      setCurrentParkinglot([]);
+    };
+  }, [user.currentUser]);
+
   return (
     <Container>
       <div className="flex mt-[2%] h-[8%] w-[90%] items-center font-bold">
@@ -56,11 +118,9 @@ function Home() {
         <span className="ml-2">5 / 10</span>
       </div>
       <ItemContainer>
-        <CurrentTicketItem />
-        <CurrentTicketItem />
-        <CurrentTicketItem />
-        <CurrentTicketItem />
-        <CurrentTicketItem />
+        {currentParkinglot
+          ? currentParkinglot.map((value) => <CurrentTicketItem data={value} />)
+          : "없음"}
       </ItemContainer>
       <OnOffContinaer
         style={{ backgroundColor: onOff ? "#61BFAD" : "#FF8B8B" }}
@@ -70,7 +130,7 @@ function Home() {
             transform: onOff ? "translate(4%, 0)" : "translate(144%, 0)",
             color: onOff ? "#61BFAD" : "#FF8B8B",
           }}
-          onClick={() => setOnOff(!onOff)}
+          onClick={handleOnOff}
         >
           {onOff ? "ON" : "OFF"}
         </OnOff>

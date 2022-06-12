@@ -6,6 +6,13 @@ import blueMarker3 from "../../../image/markers/B3.png";
 import blueMarker4 from "../../../image/markers/B4.png";
 import blueMarker5 from "../../../image/markers/B5.png";
 import blueMarkerPlus from "../../../image/markers/B5+.png";
+import redMarker0 from "../../../image/markers/R0.png";
+import redMarker1 from "../../../image/markers/R1.png";
+import redMarker2 from "../../../image/markers/R2.png";
+import redMarker3 from "../../../image/markers/R3.png";
+import redMarker4 from "../../../image/markers/R4.png";
+import redMarker5 from "../../../image/markers/R5.png";
+import redMarkerPlus from "../../../image/markers/R5+.png";
 import userPositionImg from "../../../image/car.png";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
@@ -22,22 +29,41 @@ const MapContainer = styled.div`
   border-radius: 8px;
 `;
 
-const ticketShowNum = (num) => {
-  switch (num) {
-    case 0:
-      return blueMarker0;
-    case 1:
-      return blueMarker1;
-    case 2:
-      return blueMarker2;
-    case 3:
-      return blueMarker3;
-    case 4:
-      return blueMarker4;
-    case 5:
-      return blueMarker5;
-    default:
-      return blueMarkerPlus;
+const ticketShowNum = (num, ableParking) => {
+  if (ableParking) {
+    switch (num) {
+      case 0:
+        return blueMarker0;
+      case 1:
+        return blueMarker1;
+      case 2:
+        return blueMarker2;
+      case 3:
+        return blueMarker3;
+      case 4:
+        return blueMarker4;
+      case 5:
+        return blueMarker5;
+      default:
+        return blueMarkerPlus;
+    }
+  } else {
+    switch (num) {
+      case 0:
+        return redMarker0;
+      case 1:
+        return redMarker1;
+      case 2:
+        return redMarker2;
+      case 3:
+        return redMarker3;
+      case 4:
+        return redMarker4;
+      case 5:
+        return redMarker5;
+      default:
+        return redMarkerPlus;
+    }
   }
 };
 
@@ -64,7 +90,7 @@ function Map({ map, ps, userPosition }) {
         store[index].x
       );
       const markerImage = new window.kakao.maps.MarkerImage(
-        ticketShowNum(ticketCnt),
+        ticketShowNum(ticketCnt, !!store[index].ableParking),
         new window.kakao.maps.Size(30, 40),
         new window.kakao.maps.Point(20, 40)
       );
@@ -72,7 +98,7 @@ function Map({ map, ps, userPosition }) {
         position: markerPosition,
         image: markerImage,
       });
-      if (!!hadTicket) {
+      if (!!hadTicket && !!store[index].ableParking) {
         window.kakao.maps.event.addListener(marker, "click", () => {
           dialogRef.current.showModal();
           setDialogData(hadTicket);
@@ -121,7 +147,9 @@ function Map({ map, ps, userPosition }) {
   useEffect(() => {
     if (!user.currentUser) return;
     async function getStore() {
-      const snapShot = await get(child(ref(getDatabase()), "store/"));
+      const snapShot = await get(
+        child(ref(getDatabase()), "users/proprietor/")
+      );
       setStore(snapShot.val() ? Object.values(snapShot.val()) : []);
     }
     async function getTicket() {

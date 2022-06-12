@@ -14,25 +14,42 @@ const Container = styled.div`
   color: #505050;
 `;
 
-function CurrentTicketItem() {
+const formateDate = (millisecond) => {
+  const tempTime = new Date(millisecond);
+  let hours = tempTime.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+
+  let minutes = tempTime.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${hours} : ${minutes}`;
+};
+
+function CurrentTicketItem({ data }) {
   return (
     <Container>
       <div className="flex w-[100%] h-[30%] justify-between">
-        <span>이름 : 나종현</span>
+        <span>{`이름 : ${data?.userName}`}</span>
         <div className="flex flex-col text-[0.5rem]">
-          <span>이용 시작 시간 12 : 30</span>
-          <span>이용 시작 시간 13 : 30</span>
+          <span>{`이용 시작 시간 ${formateDate(data?.timestamp)}`}</span>
+          <span>{`이용 시작 시간 ${formateDate(
+            data?.timestamp + data?.remainTime * 60000
+          )}`}</span>
         </div>
       </div>
       <div className="flex h-[30%]">
-        <span>차량 번호 : 12가 1234</span>
+        <span>{`차량번호 : ${data?.userCarNum}`}</span>
       </div>
       <div className="flex h-[20%]">
-        <span>연락처 : 010-2912-1234</span>
+        <span>{`연락처 : ${data?.userPhoneNum}`}</span>
       </div>
       <div className="flex justify-end items-center h-[20%]">
         <IoTimerOutline className="text-2xl" />
-        <span>30분</span>
+        <span>{`${data?.remainTime}분`}</span>
       </div>
     </Container>
   );

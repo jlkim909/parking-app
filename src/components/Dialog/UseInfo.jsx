@@ -64,6 +64,7 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
   const { user } = useSelector((state) => state);
   const [carNum, setCarNum] = useState("");
   const [useTicketNum, setUseTicketNum] = useState(1);
+
   const createInUseTicket = useCallback(
     () => ({
       timestamp: serverTimestamp(),
@@ -81,6 +82,7 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
       selectTicket?.storeTicketTime,
     ]
   );
+
   const createInUseUser = useCallback(
     (user) => ({
       timestamp: serverTimestamp(),
@@ -91,6 +93,7 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
     }),
     [carNum, useTicketNum, selectTicket?.storeTicketTime]
   );
+
   const isSendValidate = useCallback(() => {
     if (carNum.length <= 0) return false;
     if (selectTicket?.remainTime < selectTicket?.storeTicketTime * useTicketNum)
@@ -116,7 +119,13 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
       const userData = await get(
         ref(getDatabase(), "users/" + user.currentUser.uid)
       );
-      if (!keep.val()) {
+      const ableParking = await get(
+        ref(
+          getDatabase(),
+          "users/proprietor/" + selectTicket.storeCode + "/ableParking"
+        )
+      );
+      if (!keep.val() && !!ableParking.val()) {
         await remove(
           ref(
             getDatabase(),
@@ -133,7 +142,10 @@ function DialogUse({ selectTicket, dialogRef, chagePage }) {
         await set(
           ref(
             getDatabase(),
-            "users/proprietor/" + selectTicket?.storeCode + "/inUseParkinglot"
+            "users/proprietor/" +
+              selectTicket?.storeCode +
+              "/storeParkinglot/" +
+              userData.val().name
           ),
           createInUseUser(userData.val())
         );

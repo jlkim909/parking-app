@@ -142,6 +142,7 @@ function JoinProprietor() {
           ticketTime: ticketTime,
           parkingSpace: parkingSpace,
           fullTime: fullTime,
+          ableParking: true,
           x: storePosition?.x,
           y: storePosition?.y,
         });
