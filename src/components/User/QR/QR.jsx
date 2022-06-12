@@ -68,7 +68,8 @@ function QR() {
     <Container>
       <QrReader
         onResult={(result, error) => {
-          if (!!result && !data) {
+          if (!!data) return;
+          if (!!result) {
             alert("스캔 완료!!");
             setData(JSON.parse(decodeURIComponent(result?.text)));
           }
